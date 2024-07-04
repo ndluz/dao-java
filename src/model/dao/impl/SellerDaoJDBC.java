@@ -55,17 +55,9 @@ public class SellerDaoJDBC implements SellerDAO {
 			
 			if (resultSet.next()) {
 				// need to associate both objects Department and Seller
-				Department department = new Department();
-				department.setId(resultSet.getInt("Id"));
-				department.setName(resultSet.getString("name"));
+				Department department = instanciateDepartment(resultSet);
 				
-				Seller seller = new Seller();
-				seller.setId(resultSet.getInt("Id"));
-				seller.setName(resultSet.getString("Name"));
-				seller.setEmail(resultSet.getString("Email"));
-				seller.setBaseSalary(resultSet.getDouble("BaseSalary"));
-				seller.setBirthDate(resultSet.getDate("BirthDate"));
-				seller.setDepartment(department);
+				Seller seller = instanciateSeller(resultSet, department);
 				return seller;
 			}
 			
@@ -77,6 +69,24 @@ public class SellerDaoJDBC implements SellerDAO {
 			DB.closeStatement(statement);
 			DB.closeResultSet(resultSet);
 		}
+	}
+
+	private Seller instanciateSeller(ResultSet resultSet, Department department) throws SQLException {
+		Seller seller = new Seller();
+		seller.setId(resultSet.getInt("Id"));
+		seller.setName(resultSet.getString("Name"));
+		seller.setEmail(resultSet.getString("Email"));
+		seller.setBaseSalary(resultSet.getDouble("BaseSalary"));
+		seller.setBirthDate(resultSet.getDate("BirthDate"));
+		seller.setDepartment(department);
+		return seller;
+	}
+
+	private Department instanciateDepartment(ResultSet resultSet) throws SQLException {
+		Department department = new Department();
+		department.setId(resultSet.getInt("Id"));
+		department.setName(resultSet.getString("name"));
+		return department;
 	}
 
 	@Override
